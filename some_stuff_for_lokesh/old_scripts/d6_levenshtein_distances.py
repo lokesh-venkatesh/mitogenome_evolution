@@ -1,0 +1,50 @@
+from pathlib import Path
+from mitofuncs.mito import *
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+import matplotlib.cm as cm
+import seaborn as sn
+
+all_species_names = list_all_species_names_from_file_path()
+all_species_gene_data = {species: pd.read_csv(f"genbank_files/{species}/{species}_modified_cleaned_gene_data.tsv", 
+                                              delimiter="\t").squeeze() for species in all_species_names}
+all_species_gene_order_lists = {species: all_species_gene_data[species]['Gene'].tolist() 
+                                for species in all_species_names}
+
+all_genomes_levenshtein_distance_matrix = []
+for species_1 in all_species_names:
+    gene_order_1 = all_species_gene_order_lists[species_1]
+    row = []
+    for species_2 in all_species_names:
+        gene_order_2 = all_species_gene_order_lists[species_2]
+        row.append(return_levenshtein_distance(gene_order_1, gene_order_2))
+    all_genomes_levenshtein_distance_matrix.append(row)
+    print(species_1)
+
+all_genomes_levenshtein_distance_df = pd.DataFrame(all_genomes_levenshtein_distance_matrix, 
+                                                   index=all_species_names, columns=all_species_names)
+plt.figure(figsize=(12,12))
+hm = sn.heatmap(all_genomes_levenshtein_distance_df,
+                cmap='coolwarm',
+                #xticklabels=trial_dataset_names, yticklabels=trial_dataset_names,
+                square=True, 
+                vmin=0, 
+                #vmax=1, #annot=True, fmt=".2g"
+                )
+plt.title(f"Heatmap of all Levenshtein distances for all species' gene orders taken pairwise")
+plt.xlabel("Species")
+plt.ylabel("Species")
+plt.tight_layout()
+
+levenshtein_folder_path = Path("results/levenshtein")
+if not levenshtein_folder_path.exists():
+    levenshtein_folder_path.mkdir(parents=True)
+
+plt.savefig(f"results/levenshtein/all_genomes_levenshtein_distance_df.png", dpi=400)
+all_genomes_levenshtein_distance_df.to_csv(f"results/levenshtein/all_genomes_levenshtein_distance_df", sep="\t")
+
+MEGA11_Levenshtein_Distances_String = convert_dataframe_to_MEGA11_file_format(all_genomes_levenshtein_distance_df, "Levenshtein Distances for all Gene Orders")
+write_string_to_file(MEGA11_Levenshtein_Distances_String, "results/levenshtein/all_genomes_levenshtein_distances.MEG")

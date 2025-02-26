@@ -1,0 +1,32 @@
+MUKUNDAN's QUESTION: FIND OUT HOW THE MITOCHONDRIAL GENOME IS TYPICALLY STUDIED.
+
+
+1. Work with more genomes. See if you can get large clusters of species. Mainly Plants, Animalia and Fungi. See if you can cluster them based on their:
+    1. Genome sizes
+    2. Number of genes
+
+2. Theoretically, if we assume that all organisms came from one common ancestor it should be possible to retrace all of the genomes back in time based on translocations. Should I do this manually?
+
+3. Redo the moving window plots based on the gene frequencies for the whole genome, not just that particular region. See if you get lines along the diagonal then. Do this for all 8C2 combinations of your model organisms, and see which ones show strong diagonals.
+
+4. (some facts about the mitochondrial genome's) divergence across organisms:
+    The mitochondrial genome varies widely among species in size, gene content, and structure:
+        1. Animals: Compact genomes with conserved gene order and minimal non-coding regions.
+        2. Plants: Large, highly variable mitochondrial genomes with frequent introns, repeats, and horizontal gene transfer.
+        3. Fungi and Protists: Extremely diverse genomes; some have fragmented or linear mtDNA.
+    Despite this variation, core genes for respiration and translation are conserved.
+
+5. Presence of the Mitochondrial Genome in Various Organisms
+    1. Animals: Animal mitochondrial genomes are small (~16 kb in humans), encoding 37 genes: 13 protein-coding genes, 22 tRNAs, and 2 rRNAs.
+    2. Plants: Plant mitochondrial genomes are significantly larger and more complex. They can include 40–60 genes but may reach sizes of hundreds of kilobases due to repeats, introns, and foreign DNA.
+    3. Fungi: Fungal mitochondrial genomes vary, with some maintaining highly reduced genomes, while others show unique structural variations, such as introns and plasmid-like elements.
+    4. Protists: Protist mitochondria exhibit extreme diversity. For instance, Plasmodium falciparum (malaria parasite) has a highly reduced mitochondrial genome (~6 kb), while others are more complex.
+    5. Metazoans vs. Non-Metazoans: Metazoan mitochondrial genomes are typically more streamlined, whereas non-metazoan genomes (e.g., plants, fungi) often retain remnants of their bacterial ancestry.
+
+6. Fundamental facts about the mt genome:
+    - The mitochondrial genome is typically circular and double-stranded, though exceptions (e.g., linear forms) exist in some species.
+    - Its size is small compared to nuclear genomes, ranging from about 15-20 kilobases in animals (e.g., humans) to hundreds of kilobases in some plants and protists.
+    - It is compact, containing relatively few non-coding regions and high gene density.
+Refer to mtDNA.png for some numbers.
+
+7. Look for the actual binding site motifs for each gene family in each genome... locate them, especially in the case of Yeast.

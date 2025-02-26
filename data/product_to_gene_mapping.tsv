@@ -1,0 +1,45 @@
+Product	Gene
+12S ribosomal RNA	srRNA
+16S ribosomal RNA	lrRNA
+ATP synthase F0 subunit 6	ATP6
+ATP synthase F0 subunit 8	ATP8
+ATPase subunit 6	ATP6
+ATPase subunit 8	ATP8
+NADH dehydrogenase subunit 1	ND1
+NADH dehydrogenase subunit 2	ND2
+NADH dehydrogenase subunit 3	ND3
+NADH dehydrogenase subunit 4	ND4
+NADH dehydrogenase subunit 4L	ND4L
+NADH dehydrogenase subunit 5	ND5
+NADH dehydrogenase subunit 6	ND6
+cytochrome b	CYTB
+cytochrome c oxidase subunit I	COX1
+cytochrome c oxidase subunit II	COX2
+cytochrome c oxidase subunit III	COX3
+cytochrome oxidase subunit 1	COX1
+cytochrome oxidase subunit II	COX2
+cytochrome oxidase subunit III	COX3
+l-rRNA	lrRNA
+large subunit ribosomal RNA	lrRNA
+s-rRNA	srRNA
+small subunit ribosomal RNA	srRNA
+tRNA-Ala	TrnA
+tRNA-Arg	TrnR
+tRNA-Asn	TrnN
+tRNA-Asp	TrnD
+tRNA-Cys	TrnC
+tRNA-Gln	TrnQ
+tRNA-Glu	TrnE
+tRNA-Gly	TrnG
+tRNA-His	TrnH
+tRNA-Ile	TrnI
+tRNA-Leu	TrnL
+tRNA-Lys	TrnK
+tRNA-Met	TrnM
+tRNA-Phe	TrnF
+tRNA-Pro	TrnP
+tRNA-Ser	TrnS
+tRNA-Thr	TrnT
+tRNA-Trp	TrnW
+tRNA-Tyr	TrnY
+tRNA-Val	TrnV

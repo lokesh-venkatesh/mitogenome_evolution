@@ -1,0 +1,154 @@
+Product	Gene
+12S ribosomal RNA	srRNA
+12S ribosomal RNA	
+16S ribosomal RNA	mt-Rnr2
+16S ribosomal RNA	
+16S ribosomal RNA	lrRNA
+ATP synthase F0 subunit 6	ATP6
+ATP synthase F0 subunit 6	
+ATP synthase F0 subunit 8	ATP8
+ATP synthase F0 subunit 8	
+ATPase subunit 6	
+ATPase subunit 8	
+NADH dehydrogenase subunit 1	
+NADH dehydrogenase subunit 1	ND1
+NADH dehydrogenase subunit 2	ND2
+NADH dehydrogenase subunit 2	
+NADH dehydrogenase subunit 3	
+NADH dehydrogenase subunit 3	ND3
+NADH dehydrogenase subunit 4	ND4
+NADH dehydrogenase subunit 4	
+NADH dehydrogenase subunit 4L	
+NADH dehydrogenase subunit 4L	ND4L
+NADH dehydrogenase subunit 5	ND5
+NADH dehydrogenase subunit 5	
+NADH dehydrogenase subunit 6	ND6
+NADH dehydrogenase subunit 6	
+cytochrome b	
+cytochrome b	CYTB
+cytochrome c oxidase subunit I	COX1
+cytochrome c oxidase subunit I	
+cytochrome c oxidase subunit II	
+cytochrome c oxidase subunit II	COX2
+cytochrome c oxidase subunit III	COX3
+cytochrome c oxidase subunit III	
+cytochrome oxidase subunit 1	
+cytochrome oxidase subunit II	
+cytochrome oxidase subunit III	
+l-rRNA	mt-rnr2
+l-rRNA	
+l-rRNA	RNR2
+large subunit ribosomal RNA	
+s-rRNA	RNR1
+s-rRNA	
+s-rRNA	mt-Rnr1
+s-rRNA	mt-rnr1
+small subunit ribosomal RNA	
+tRNA-Ala	TRNA
+tRNA-Ala	trnA(tgc)
+tRNA-Ala	trnA
+tRNA-Ala	TrnA
+tRNA-Ala	
+tRNA-Arg	TRNR
+tRNA-Arg	
+tRNA-Arg	TrnR
+tRNA-Arg	trnR
+tRNA-Arg	trnR(tcg)
+tRNA-Asn	trnN(gtt)
+tRNA-Asn	trnN
+tRNA-Asn	
+tRNA-Asn	TrnN
+tRNA-Asn	TRNN
+tRNA-Asp	TrnD
+tRNA-Asp	TRND
+tRNA-Asp	trnD(gtc)
+tRNA-Asp	
+tRNA-Asp	trnD
+tRNA-Cys	
+tRNA-Cys	TRNC
+tRNA-Cys	trnC
+tRNA-Cys	trnC(gca)
+tRNA-Cys	TrnC
+tRNA-Gln	trnQ
+tRNA-Gln	trnQ(ttg)
+tRNA-Gln	
+tRNA-Gln	TRNQ
+tRNA-Gln	TrnQ
+tRNA-Glu	
+tRNA-Glu	trnE
+tRNA-Glu	TrnE
+tRNA-Glu	TRNE
+tRNA-Glu	trnE(ttc)
+tRNA-Gly	
+tRNA-Gly	TRNG
+tRNA-Gly	trnG
+tRNA-Gly	TrnG
+tRNA-Gly	trnG(tcc)
+tRNA-His	TrnH
+tRNA-His	trnH(gtg)
+tRNA-His	trnH
+tRNA-His	TRNH
+tRNA-His	
+tRNA-Ile	trnI(gat)
+tRNA-Ile	
+tRNA-Ile	TrnI
+tRNA-Ile	TRNI
+tRNA-Ile	trnI
+tRNA-Leu	TRNL2
+tRNA-Leu	
+tRNA-Leu	trnL1(tag)
+tRNA-Leu	trnL1
+tRNA-Leu	TrnL2
+tRNA-Leu	TrnL1
+tRNA-Leu	trnL2(taa)
+tRNA-Leu	TRNL1
+tRNA-Leu	trnL2
+tRNA-Lys	
+tRNA-Lys	TRNK
+tRNA-Lys	trnK
+tRNA-Lys	TrnK
+tRNA-Lys	trnK(ctt)
+tRNA-Met	TrnM
+tRNA-Met	TRNM
+tRNA-Met	trnM(cat)
+tRNA-Met	trnM
+tRNA-Met	
+tRNA-Phe	trnF(gaa)
+tRNA-Phe	TRNF
+tRNA-Phe	
+tRNA-Phe	trnF
+tRNA-Phe	TrnF
+tRNA-Pro	trnP(tgg)
+tRNA-Pro	
+tRNA-Pro	TRNP
+tRNA-Pro	trnP
+tRNA-Pro	TrnP
+tRNA-Ser	trnS1
+tRNA-Ser	
+tRNA-Ser	TRNS2
+tRNA-Ser	TRNS1
+tRNA-Ser	trnS2
+tRNA-Ser	trnS1(gct)
+tRNA-Ser	TrnS1
+tRNA-Ser	trnS2(tga)
+tRNA-Ser	TrnS2
+tRNA-Thr	TRNT
+tRNA-Thr	trnT(tgt)
+tRNA-Thr	TrnT
+tRNA-Thr	
+tRNA-Thr	trnT
+tRNA-Trp	
+tRNA-Trp	trnW
+tRNA-Trp	TrnW
+tRNA-Trp	TRNW
+tRNA-Trp	trnW(tca)
+tRNA-Tyr	trnY
+tRNA-Tyr	trnY(gta)
+tRNA-Tyr	
+tRNA-Tyr	TrnY
+tRNA-Tyr	TRNY
+tRNA-Val	
+tRNA-Val	trnV(tac)
+tRNA-Val	TrnV
+tRNA-Val	TRNV
+tRNA-Val	trnV

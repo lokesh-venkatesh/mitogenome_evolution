@@ -1,0 +1,2 @@
+# mitoevo
+This repo contains all code, docs and other files that I have used so far whilst studying and analysing mitochondrial genomes for evidence and patterns behind translocations, using ideas underlying motif distributions.

@@ -1,0 +1,15 @@
+source
+gene
+CDS
+repeat_region
+misc_feature
+ncRNA
+5'UTR
+exon
+misc_feature
+3'UTR
+tRNA
+rRNA
+rep_origin
+D-loop
+variation
