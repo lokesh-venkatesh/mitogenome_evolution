@@ -40,7 +40,7 @@ for k in [5,6]:
                                              file_name=f"{j}th target sequence",
                                              folder_path=final_correlation_dump_folder_path,
                                              )
-            r = modified_correlation_coefficient(vector_i,vector_j)
+            r = pearson_correlation_coefficient(vector_i,vector_j)
             row.append(r)
         correlation_matrix.append(row)
     

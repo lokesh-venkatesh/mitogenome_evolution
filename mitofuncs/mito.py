@@ -258,12 +258,12 @@ def pcc(series_1,series_2):
     r = series_1.corr(series_2)
     return r
 
-def modified_correlation_coefficient(series_1,series_2):
+def pearson_correlation_coefficient(series_1,series_2):
     """RETURNS THE PEARSON CORRELATION COEFFICIENT BETWEEN TWO MOTIF VECTORS"""
     if len(series_1)!=len(series_2):
         raise ValueError("Both series must have the same length")
     r = series_1.corr(series_2)
-    return (r+1)/2
+    return r
 
 def randomise(genome_seq):
     """SCRAMBLES THE GIVEN GENOME USING THE NUCLEOTIDE FREQUENCIES OBTAINED FROM THE ORIGINAL GENOME"""
@@ -282,7 +282,7 @@ def generate_correlation_matrix(dictionary_of_vectors, r_type):
             if r_type=="pcc":
                 r = pcc(vector_1, vector_2)
             elif r_type=="modified_pcc":
-                r = modified_correlation_coefficient(vector_1, vector_2)
+                r = pearson_correlation_coefficient(vector_1, vector_2)
             matrix_row.append(r)
         matrix.append(matrix_row)
     correlation_dataframe = pd.DataFrame(matrix, index=species_names, columns=species_names)
@@ -292,6 +292,7 @@ def generate_distance_matrix(dictionary_of_vectors, r_type):
     """CALCULATES THE DISTANCE MATRIX FROM THE CORRELATION MATRIX GENERATED
     CHOOSE EITHER r_type="pcc" pr r_type="modified_pcc" for this function!!! """
     corrln_df = generate_correlation_matrix(dictionary_of_vectors, r_type)
+    corrln_df = (corrln_df+1)/2
     distance_df = -np.log10(corrln_df)
     return distance_df
 
@@ -402,19 +403,11 @@ def generate_variable_Nmers(N):
     return [item for item in ultimate_output if item not in kmer_list]
 
 def return_levenshtein_distance(list1, list2):
-    len_list1 = len(list1) + 1
-    len_list2 = len(list2) + 1
-    matrix = np.zeros((len_list1, len_list2))  # Create a matrix to store distances
-    for x in range(len_list1):  # Initialize the matrix
-        matrix[x, 0] = x
-    for y in range(len_list2):
-        matrix[0, y] = y
+    len_list1, len_list2 = len(list1) + 1, len(list2) + 1
+    matrix = np.array([[x if y == 0 else y if x == 0 else 0 for y in range(len_list2)] for x in range(len_list1)])
     for x in range(1, len_list1):  # Compute the Levenshtein distance
         for y in range(1, len_list2):
-            if list1[x-1] == list2[y-1]:
-                cost = 0
-            else:
-                cost = 1
+            cost = 0 if list1[x-1] == list2[y-1] else 1
             matrix[x, y] = min(matrix[x-1, y] + 1,      # Deletion
                                matrix[x, y-1] + 1,      # Insertion
                                matrix[x-1, y-1] + cost) # Substitution

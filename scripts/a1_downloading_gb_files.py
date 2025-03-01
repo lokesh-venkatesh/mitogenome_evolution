@@ -1,3 +1,8 @@
+"""
+THIS .py FILE TAKES IN THE current_species_dataset.tsv FILE,
+ AND DOWNLOADS ALL THE GENBANK FILES CORRESPONDING TO THE IDS IN THE DATAFRAME OBTAINED.
+"""
+
 from pathlib import Path
 from mitofuncs.mito import *
 import pandas as pd
