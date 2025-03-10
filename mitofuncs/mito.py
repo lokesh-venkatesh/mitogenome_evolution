@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from Bio import Entrez,SeqIO
 import time
+from scipy.spatial.distance import squareform
+from scipy.cluster.hierarchy import linkage, to_tree
+import ete3
+from ete3 import Tree
 
 def fetch_and_save_genbank(genbank_id, email, output_path):
     """
@@ -413,105 +417,120 @@ def return_levenshtein_distance(list1, list2):
                                matrix[x-1, y-1] + cost) # Substitution
     return matrix[len_list1 - 1, len_list2 - 1]
 
-
-from collections import Counter
-
-def find_translocated_chunks(genome1, genome2):
+def double_cut_and_join_model_breakpoint_distance(gene_order_1, gene_order_2):
     """
-    Given two ordered lists of gene names, where genome2 is assumed to be equal to or longer than genome1,
-    this function identifies the gene-chunks (as nested lists) that were translocated/inserted in genome2.
+    Calculate the breakpoint distance between two gene orders using the double cut and join (DCJ) model.
+    Accounts for any new genes that may be present in one gene order but not in the other.
     
-    Algorithm:
-      1. Compare gene counts between genome1 and genome2. If a gene appears more times in genome2 than in genome1
-         (or is entirely new), mark that occurrence as "translocated".
-      2. Using two index variables (i for genome1, j for genome2), iterate over the lists to find the longest 
-         contiguous segments in genome2 that are in the same order as in genome1 (ignoring genes already flagged).
-         Any gene that is not part of one of these segments is marked as translocated.
+    Parameters:
+    gene_order_1 (list): The first gene order.
+    gene_order_2 (list): The second gene order.
     
-    The output is a nested list of gene-chunks from genome2 that were identified as translocated/inserted.
-    For example, if genome2 = ["A", "X", "B", "C", "Y", "D", "E"] (with genome1 = ["A", "B", "C", "D", "E"]),
-    the returned output will be: [["X"], ["Y"]]
+    Returns:
+    int: The breakpoint distance.
     """
-    
-    # ----- Step 1: Flag extra or repeated genes in genome2 -----
-    counter1 = Counter(genome1)
-    translocated_flags = [False] * len(genome2)  # one flag per gene in genome2
-    occ_tracker = {}  # to track occurrences as we scan genome2
-    
-    for idx, gene in enumerate(genome2):
-        occ_tracker[gene] = occ_tracker.get(gene, 0) + 1
-        expected = counter1.get(gene, 0)
-        # if this gene occurs more times than expected, flag it as translocated (i.e. an insertion/repeat)
-        if occ_tracker[gene] > expected:
-            translocated_flags[idx] = True
+    def create_adjacency_list(gene_order):
+        adjacency_list = {}
+        for i in range(len(gene_order) - 1):
+            adjacency_list[gene_order[i]] = gene_order[i + 1]
+            adjacency_list[gene_order[i + 1]] = gene_order[i]
+        return adjacency_list
 
-    # ----- Step 2: Find matching (in-order) segments in genome2 that correspond to genome1 -----
-    # We use two indices, i for genome1 and j for genome2.
-    i, j = 0, 0
-    n1, n2 = len(genome1), len(genome2)
-    
-    # We also record the matching segments (as intervals of indices in genome2)
-    matching_segments = []
-    
-    while i < n1 and j < n2:
-        # Skip over any gene in genome2 already flagged as extra/translocated.
-        if translocated_flags[j]:
-            j += 1
-            continue
+    def count_cycles(adjacency_list_1, adjacency_list_2):
+        visited = set()
+        cycles = 0
 
-        # When the current gene in genome2 matches the current gene in genome1,
-        # start recording a matching segment.
-        if genome1[i] == genome2[j]:
-            seg_start = j
-            # Extend the matching segment as far as possible.
-            while i < n1 and j < n2 and not translocated_flags[j] and genome1[i] == genome2[j]:
-                i += 1
-                j += 1
-            matching_segments.append((seg_start, j))
-        else:
-            # If the gene in genome2 does not match genome1[i], mark it as out-of-order.
-            translocated_flags[j] = True
-            j += 1
+        for gene in adjacency_list_1:
+            if gene not in visited:
+                cycles += 1
+                current = gene
+                while current not in visited:
+                    visited.add(current)
+                    current = adjacency_list_2.get(adjacency_list_1[current], None)
+                    if current is None:
+                        break
+        return cycles
 
-    # Any remaining genes in genome2 (after the two-pointer loop) are not part of any matching segment.
-    while j < n2:
-        translocated_flags[j] = True
-        j += 1
+    # Create adjacency lists for both gene orders
+    adjacency_list_1 = create_adjacency_list(gene_order_1)
+    adjacency_list_2 = create_adjacency_list(gene_order_2)
 
-    # ----- Build the nested list of translocated/inserted gene-chunks -----
-    # We simply group together consecutive genes in genome2 that were flagged.
-    translocated_chunks = []
-    current_chunk = []
+    # Include any new genes that may be present in one gene order but not in the other
+    all_genes = set(gene_order_1).union(set(gene_order_2))
+    for gene in all_genes:
+        if gene not in adjacency_list_1:
+            adjacency_list_1[gene] = None
+        if gene not in adjacency_list_2:
+            adjacency_list_2[gene] = None
+
+    # Count the number of cycles in the combined adjacency graph
+    cycles = count_cycles(adjacency_list_1, adjacency_list_2)
+
+    # Calculate the breakpoint distance
+    n = len(all_genes)
+    breakpoint_distance = n - cycles
+
+    return breakpoint_distance
+
+def infer_evolutionary_order(genome_names, distance_matrix):
+    """
+    Given a distance matrix, infers the evolutionary order of genomes.
+
+    Parameters:
+    - genome_names: List of genome names corresponding to the rows/columns of the distance matrix.
+    - distance_matrix: A symmetric NxN numpy array representing pairwise distances.
+
+    Returns:
+    - A list of genome names ordered from oldest to newest based on the inferred tree.
+    """
+    # Convert distance matrix to condensed form (needed for scipy linkage)
+    condensed_distances = squareform(distance_matrix, checks=False)
+    # Perform hierarchical clustering using the Neighbor-Joining equivalent (UPGMA or single-linkage)
+    linkage_matrix = linkage(condensed_distances, method='average')  # UPGMA approximation
+    # Convert linkage matrix to tree structure
+    root_node, node_list = to_tree(linkage_matrix, rd=True)
+    # Map internal node IDs to genome names
+    leaf_names = {i: genome_names[i] for i in range(len(genome_names))}
+    # Function to traverse the tree and extract genome order
+    def get_evolutionary_order(node):
+        if node.is_leaf():
+            return [leaf_names[node.id]]
+        left_order = get_evolutionary_order(node.left) if node.left else []
+        right_order = get_evolutionary_order(node.right) if node.right else []
+        return left_order + right_order
+    # Get evolutionary order via pre-order traversal
+    evolutionary_order = get_evolutionary_order(root_node)
+    return evolutionary_order
+
+def identify_translocated_chunks(gene_order_1, gene_order_2):
+    """
+    Identify the breakpoints between two gene orders and return the translocated 'chunks' as a list.
     
-    for idx, flag in enumerate(translocated_flags):
-        if flag:
-            current_chunk.append(genome2[idx])
-        else:
-            if current_chunk:
-                translocated_chunks.append(current_chunk)
-                current_chunk = []
-    # If the last genes in genome2 were flagged, add the final chunk.
-    if current_chunk:
-        translocated_chunks.append(current_chunk)
+    Parameters:
+    gene_order_1 (list): The first gene order.
+    gene_order_2 (list): The second gene order.
+    
+    Returns:
+    list: A list of translocated chunks.
+    """
+    def find_breakpoints(order1, order2):
+        breakpoints = []
+        for i in range(len(order1) - 1):
+            if order1[i + 1] != order2[order2.index(order1[i]) + 1]:
+                breakpoints.append((order1[i], order1[i + 1]))
+        return breakpoints
+
+    def extract_chunks(order, breakpoints):
+        chunks = []
+        start = 0
+        for breakpoint in breakpoints:
+            end = order.index(breakpoint[1])
+            chunks.append(order[start:end + 1])
+            start = end + 1
+        chunks.append(order[start:])
+        return chunks
+
+    breakpoints = find_breakpoints(gene_order_1, gene_order_2)
+    translocated_chunks = extract_chunks(gene_order_1, breakpoints)
     
     return translocated_chunks
-
-
-# ----- Example usage -----
-if __name__ == '__main__':
-    # Example 1:
-    # Genome1 has genes in order.
-    genome1 = ["A", "B", "C", "D", "E"]
-    # Genome2 is genome1 with two extra/inserted genes ("X" and "Y") in between.
-    genome2 = ["A", "X", "B", "C", "Y", "D", "E"]
-    chunks = find_translocated_chunks(genome1, genome2)
-    print("Example 1 translocated gene-chunks:")
-    print(chunks)  # Expected output: [["X"], ["Y"]]
-    
-    # Example 2:
-    # Here genome2 has a single contiguous block of extra genes.
-    genome1 = ["A", "B", "C", "D", "E"]
-    genome2 = ["A", "X", "Y", "Z", "B", "C", "D", "E"]
-    chunks = find_translocated_chunks(genome1, genome2)
-    print("\nExample 2 translocated gene-chunks:")
-    print(chunks)  # Expected output: [["X", "Y", "Z"]]

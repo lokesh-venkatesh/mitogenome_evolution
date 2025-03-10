@@ -15,8 +15,8 @@ This repo contains all code, docs and other files that I have used so far whilst
 9. Next, using this same distance matrix, we need to come up with some `order of evolution` for all the genomes in this dataset. *I need to figure out how to do this from the distance matrix...*
 10. Between each pair of genomes, you then need to identify which chunks of genes have changed between two gene orders. *I need to come up with a clever function for this. The old stuff might not work. In fact the older function is probably incorrect and has a lot of errors in it...*
 11. Then, for each pair of genomes as I iterate over the dataset, and for each translocated gene chunk, I identify the four sets of sequences using the following hyperparameters:
-    1.  The window size from the 5' end (before the left side)
-    2.  The window size from the 3' end (before the right side)
+    1.  The window size from the 5' end (before the left side) = $100$ (prolly)
+    2.  The window size from the 3' end (before the right side) = $100$ (prolly)
     I will then need to optimise over these hyperparameters later on (*I don't know what my optimisation criterion would be*) and find the best hyperparameters.
     
 12. For each of these four categories of sequences obtained, I will then need to perform further analysis in the following manner. I first treat these four categories of sequences separately, then as two pairs, and finally club them together in the following analysis. For each of these sequences, I construct the 5-mer and 6-mer vectors for them and store all of this data. 

@@ -35,7 +35,7 @@ def extract_feature_descriptive_vector(gene_order_list):
     n_CDS = 0
     n_RNA = 0
     for item in gene_order_list:
-        if item[0:5]=='lrRNA' or item[0:5]=='srRNA' or item[0:3]=='tRN':
+        if item[0:5]=='lrRNA' or item[0:5]=='srRNA' or item[0:3]=='Trn':
             n_RNA += 1
     n_CDS = n_tot-n_RNA
     return [n_tot, n_CDS, n_RNA]
@@ -47,45 +47,41 @@ def extract_CDS_gene_orders_only(gene_order_list):
 all_feature_vectors = {species: extract_feature_descriptive_vector(all_species_gene_dataframes[species]['Gene'].tolist()) 
                        for species in all_species_names}
 
-# Extract CDS gene orders for coloring
 all_CDS_gene_orders = {species: extract_CDS_gene_orders_only(all_species_gene_dataframes[species]['Gene'].tolist()) 
                         for species in all_species_names}
 
-# Assign colors to unique CDS gene orders
-unique_CDS_orders = list(set(tuple(order) for order in all_CDS_gene_orders.values()))
-color_map = {order: plt.cm.tab20(i / len(unique_CDS_orders)) for i, order in enumerate(unique_CDS_orders)}
+# Extracting the components for plotting
+species_names = list(all_feature_vectors.keys())
+n_tot_values = [all_feature_vectors[species][0] for species in species_names]
+n_CDS_values = [all_feature_vectors[species][1] for species in species_names]
+n_RNA_values = [all_feature_vectors[species][2] for species in species_names]
 
-# Create a color list for each species based on their CDS gene orders
-colors = [color_map[tuple(all_CDS_gene_orders[species])] for species in all_species_names]
+# Creating the subplots
+fig, axs = plt.subplots(1, 3, figsize=(24, 8))
 
-# Convert feature vectors to a DataFrame for easier plotting
-feature_df = pd.DataFrame.from_dict(all_feature_vectors, orient='index', columns=['n_tot', 'n_CDS', 'n_RNA'])
+# Histogram for total genes
+axs[0].hist(n_tot_values, bins=range(min(n_tot_values), max(n_tot_values) + 2, 1), color='b', edgecolor='black')
+axs[0].set_title('Total Genes Distribution')
+axs[0].set_xlabel('Total Genes')
+axs[0].set_ylabel('Frequency')
+axs[0].set_xlim(10, 50)
+axs[0].set_ylim(0, len(all_species_names))
 
-# Add jitter to the points to avoid overlap
-def add_jitter(arr, scale=0.01):
-    return arr + np.random.normal(scale=scale, size=arr.shape)
+# Histogram for CDS genes
+axs[1].hist(n_CDS_values, bins=range(min(n_CDS_values), max(n_CDS_values) + 2, 1), color='g', edgecolor='black')
+axs[1].set_title('CDS Genes Distribution')
+axs[1].set_xlabel('CDS Genes')
+axs[1].set_ylabel('Frequency')
+axs[1].set_xlim(10, 50)
+axs[1].set_ylim(0, len(all_species_names))
 
-# Plotting
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-
-# Plot n_tot vs n_CDS
-axes[0].scatter(add_jitter(feature_df['n_tot'].values), add_jitter(feature_df['n_CDS'].values), c=colors)
-axes[0].set_xlabel('Total number of genes (n_tot)')
-axes[0].set_ylabel('Number of protein coding genes (n_CDS)')
-axes[0].set_title('n_tot vs n_CDS')
-
-# Plot n_tot vs n_RNA
-axes[1].scatter(add_jitter(feature_df['n_tot'].values), add_jitter(feature_df['n_RNA'].values), c=colors)
-axes[1].set_xlabel('Total number of genes (n_tot)')
-axes[1].set_ylabel('Number of RNA genes (n_RNA)')
-axes[1].set_title('n_tot vs n_RNA')
-
-# Plot n_CDS vs n_RNA
-axes[2].scatter(add_jitter(feature_df['n_CDS'].values), add_jitter(feature_df['n_RNA'].values), c=colors)
-axes[2].set_xlabel('Number of protein coding genes (n_CDS)')
-axes[2].set_ylabel('Number of RNA genes (n_RNA)')
-axes[2].set_title('n_CDS vs n_RNA')
+# Histogram for RNA genes
+axs[2].hist(n_RNA_values, bins=range(min(n_RNA_values), max(n_RNA_values) + 2, 1), color='r', edgecolor='black')
+axs[2].set_title('RNA Genes Distribution')
+axs[2].set_xlabel('RNA Genes')
+axs[2].set_ylabel('Frequency')
+axs[2].set_xlim(10, 50)
+axs[2].set_ylim(0, len(all_species_names))
 
 plt.tight_layout()
-plt.savefig("results/gene_trends/trends_in_number_of_CDS_RNA_genes.png", dpi=400)
-plt.close()
+plt.savefig(gene_trends_folder_path/'histograms_of_gene_counts.png', dpi=300)
