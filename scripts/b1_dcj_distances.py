@@ -19,7 +19,7 @@ for species_1 in all_species_names:
     row = []
     for species_2 in all_species_names:
         gene_order_2 = all_species_gene_order_lists[species_2]
-        row.append(double_cut_and_join_model_breakpoint_distance(gene_order_1, gene_order_2))
+        row.append(return_lokesh_levenshtein_modified_distance(gene_order_1, gene_order_2, 10))
     all_genomes_DCJ_breakpoint_distance_matrix.append(row)
     print(species_1)
 
@@ -44,3 +44,5 @@ all_genomes_DCJ_breakpoint_distance_df.to_csv(f"results/DCJ_breakpoint/all_genom
 
 MEGA11_DCJ_breakpoint_Distances_String = convert_dataframe_to_MEGA11_file_format(all_genomes_DCJ_breakpoint_distance_df, "DCJ_breakpoint Distances for all Gene Orders")
 write_string_to_file(MEGA11_DCJ_breakpoint_Distances_String, "results/DCJ_breakpoint/all_genomes_DCJ_breakpoint_distances.MEG")
+
+print(all_genomes_DCJ_breakpoint_distance_df.head())

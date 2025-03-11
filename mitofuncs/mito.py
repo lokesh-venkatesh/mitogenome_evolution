@@ -406,131 +406,47 @@ def generate_variable_Nmers(N):
             ultimate_output.append(item+letter)
     return [item for item in ultimate_output if item not in kmer_list]
 
-def return_levenshtein_distance(list1, list2):
-    len_list1, len_list2 = len(list1) + 1, len(list2) + 1
-    matrix = np.array([[x if y == 0 else y if x == 0 else 0 for y in range(len_list2)] for x in range(len_list1)])
-    for x in range(1, len_list1):  # Compute the Levenshtein distance
-        for y in range(1, len_list2):
-            cost = 0 if list1[x-1] == list2[y-1] else 1
-            matrix[x, y] = min(matrix[x-1, y] + 1,      # Deletion
-                               matrix[x, y-1] + 1,      # Insertion
-                               matrix[x-1, y-1] + cost) # Substitution
-    return matrix[len_list1 - 1, len_list2 - 1]
 
-def double_cut_and_join_model_breakpoint_distance(gene_order_1, gene_order_2):
-    """
-    Calculate the breakpoint distance between two gene orders using the double cut and join (DCJ) model.
-    Accounts for any new genes that may be present in one gene order but not in the other.
-    
-    Parameters:
-    gene_order_1 (list): The first gene order.
-    gene_order_2 (list): The second gene order.
-    
-    Returns:
-    int: The breakpoint distance.
-    """
-    def create_adjacency_list(gene_order):
-        adjacency_list = {}
-        for i in range(len(gene_order) - 1):
-            adjacency_list[gene_order[i]] = gene_order[i + 1]
-            adjacency_list[gene_order[i + 1]] = gene_order[i]
-        return adjacency_list
+'''
+#---------------------------------------------------------------------------------------------------------
 
-    def count_cycles(adjacency_list_1, adjacency_list_2):
-        visited = set()
-        cycles = 0
+def synteny_blocks_wrt_one_gene_order(ref_gen_order, analysis_gen_order):
+    synteny_blocks = []
+    block = []
+    i = 0
+    dir = 0
+    while i<len(analysis_gen_order):
+        if len(block)==0:
+            block.append(analysis_gen_order[i])
+            i+=1
+        if len(block)==1:
+            j = ref_gen_order.index(block[0]) #assuming block[0] is in ref_gen_order!!!
+            if ref_gen_order[j+1]==analysis_gen_order[i]:
+                block.append(ref_gen_order[j+1])
+                dir = 1
+                i+=1
+            elif ref_gen_order[j-1]==analysis_gen_order[i]:
+                block.insert(0,ref_gen_order[j-1])
+                dir = -1
+                i+=1
+            else:
+                synteny_blocks.append(block)
+                block = []
+'''
+        
 
-        for gene in adjacency_list_1:
-            if gene not in visited:
-                cycles += 1
-                current = gene
-                while current not in visited:
-                    visited.add(current)
-                    current = adjacency_list_2.get(adjacency_list_1[current], None)
-                    if current is None:
-                        break
-        return cycles
+def identify_synteny_blocks_between_two_gene_orders_with_same_gene_content(gene_order_1, gene_order_2):
+    synteny_blocks_1 = []
+    synteny_blocks_2 = []
 
-    # Create adjacency lists for both gene orders
-    adjacency_list_1 = create_adjacency_list(gene_order_1)
-    adjacency_list_2 = create_adjacency_list(gene_order_2)
+all_species_names = list_all_species_names_from_file_path()
+all_species_gene_data = {species: pd.read_csv(f"data/genbank_files/{species}/{species}_cleaned_gene_data.tsv", 
+                                              delimiter="\t").squeeze() for species in all_species_names}
+all_species_gene_order_lists = {species: all_species_gene_data[species]['Gene'].tolist() 
+                                for species in all_species_names}
 
-    # Include any new genes that may be present in one gene order but not in the other
-    all_genes = set(gene_order_1).union(set(gene_order_2))
-    for gene in all_genes:
-        if gene not in adjacency_list_1:
-            adjacency_list_1[gene] = None
-        if gene not in adjacency_list_2:
-            adjacency_list_2[gene] = None
-
-    # Count the number of cycles in the combined adjacency graph
-    cycles = count_cycles(adjacency_list_1, adjacency_list_2)
-
-    # Calculate the breakpoint distance
-    n = len(all_genes)
-    breakpoint_distance = n - cycles
-
-    return breakpoint_distance
-
-def infer_evolutionary_order(genome_names, distance_matrix):
-    """
-    Given a distance matrix, infers the evolutionary order of genomes.
-
-    Parameters:
-    - genome_names: List of genome names corresponding to the rows/columns of the distance matrix.
-    - distance_matrix: A symmetric NxN numpy array representing pairwise distances.
-
-    Returns:
-    - A list of genome names ordered from oldest to newest based on the inferred tree.
-    """
-    # Convert distance matrix to condensed form (needed for scipy linkage)
-    condensed_distances = squareform(distance_matrix, checks=False)
-    # Perform hierarchical clustering using the Neighbor-Joining equivalent (UPGMA or single-linkage)
-    linkage_matrix = linkage(condensed_distances, method='average')  # UPGMA approximation
-    # Convert linkage matrix to tree structure
-    root_node, node_list = to_tree(linkage_matrix, rd=True)
-    # Map internal node IDs to genome names
-    leaf_names = {i: genome_names[i] for i in range(len(genome_names))}
-    # Function to traverse the tree and extract genome order
-    def get_evolutionary_order(node):
-        if node.is_leaf():
-            return [leaf_names[node.id]]
-        left_order = get_evolutionary_order(node.left) if node.left else []
-        right_order = get_evolutionary_order(node.right) if node.right else []
-        return left_order + right_order
-    # Get evolutionary order via pre-order traversal
-    evolutionary_order = get_evolutionary_order(root_node)
-    return evolutionary_order
-
-def identify_translocated_chunks(gene_order_1, gene_order_2):
-    """
-    Identify the breakpoints between two gene orders and return the translocated 'chunks' as a list.
-    
-    Parameters:
-    gene_order_1 (list): The first gene order.
-    gene_order_2 (list): The second gene order.
-    
-    Returns:
-    list: A list of translocated chunks.
-    """
-    def find_breakpoints(order1, order2):
-        breakpoints = []
-        for i in range(len(order1) - 1):
-            if order1[i + 1] != order2[order2.index(order1[i]) + 1]:
-                breakpoints.append((order1[i], order1[i + 1]))
-        return breakpoints
-
-    def extract_chunks(order, breakpoints):
-        chunks = []
-        start = 0
-        for breakpoint in breakpoints:
-            end = order.index(breakpoint[1])
-            chunks.append(order[start:end + 1])
-            start = end + 1
-        chunks.append(order[start:])
-        return chunks
-
-    breakpoints = find_breakpoints(gene_order_1, gene_order_2)
-    translocated_chunks = extract_chunks(gene_order_1, breakpoints)
-    
-    return translocated_chunks
+human_gene_order = all_species_gene_order_lists['Homo_sapiens']
+fruitfly_gene_order = all_species_gene_order_lists['Drosophila_melanogaster']
+for item in synteny_blocks_wrt_one_gene_order(human_gene_order, fruitfly_gene_order):
+    print(item)
+    print("")
