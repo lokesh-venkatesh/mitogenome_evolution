@@ -407,46 +407,4 @@ def generate_variable_Nmers(N):
     return [item for item in ultimate_output if item not in kmer_list]
 
 
-'''
 #---------------------------------------------------------------------------------------------------------
-
-def synteny_blocks_wrt_one_gene_order(ref_gen_order, analysis_gen_order):
-    synteny_blocks = []
-    block = []
-    i = 0
-    dir = 0
-    while i<len(analysis_gen_order):
-        if len(block)==0:
-            block.append(analysis_gen_order[i])
-            i+=1
-        if len(block)==1:
-            j = ref_gen_order.index(block[0]) #assuming block[0] is in ref_gen_order!!!
-            if ref_gen_order[j+1]==analysis_gen_order[i]:
-                block.append(ref_gen_order[j+1])
-                dir = 1
-                i+=1
-            elif ref_gen_order[j-1]==analysis_gen_order[i]:
-                block.insert(0,ref_gen_order[j-1])
-                dir = -1
-                i+=1
-            else:
-                synteny_blocks.append(block)
-                block = []
-'''
-        
-
-def identify_synteny_blocks_between_two_gene_orders_with_same_gene_content(gene_order_1, gene_order_2):
-    synteny_blocks_1 = []
-    synteny_blocks_2 = []
-
-all_species_names = list_all_species_names_from_file_path()
-all_species_gene_data = {species: pd.read_csv(f"data/genbank_files/{species}/{species}_cleaned_gene_data.tsv", 
-                                              delimiter="\t").squeeze() for species in all_species_names}
-all_species_gene_order_lists = {species: all_species_gene_data[species]['Gene'].tolist() 
-                                for species in all_species_names}
-
-human_gene_order = all_species_gene_order_lists['Homo_sapiens']
-fruitfly_gene_order = all_species_gene_order_lists['Drosophila_melanogaster']
-for item in synteny_blocks_wrt_one_gene_order(human_gene_order, fruitfly_gene_order):
-    print(item)
-    print("")
