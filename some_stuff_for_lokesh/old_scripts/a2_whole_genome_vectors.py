@@ -1,5 +1,5 @@
 from pathlib import Path
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 
 folder_path = Path("results/nucl_freqs")
 

@@ -1,5 +1,5 @@
 from pathlib import Path
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 
 all_species_names = list_all_species_names_from_file_path()
 

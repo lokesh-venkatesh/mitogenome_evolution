@@ -1,29 +1,24 @@
-"""
-THIS .py FILE TAKES IN THE current_species_dataset.tsv FILE,
- AND DOWNLOADS ALL THE GENBANK FILES CORRESPONDING TO THE IDS IN THE DATAFRAME OBTAINED.
-"""
-
 from pathlib import Path
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 from Bio import Entrez
 
 lokesh_email_ID = "lokesh.venkatesh@students.iiserpune.ac.in"
-dataset_filepath = Path("data/current_species_dataset.tsv")
+dataset_filepath = Path("data/current_dataset.tsv")
 
 animal_species_series = pd.read_csv(dataset_filepath, delimiter="\t", index_col=0).squeeze()
 
-genbank_files_folder_path = Path("data/genbank_files")
-if not genbank_files_folder_path.exists(): 
-    genbank_files_folder_path.mkdir(parents=True)
+species_files_folder_path = Path("data/species_files")
+if not species_files_folder_path.exists(): 
+    species_files_folder_path.mkdir(parents=True)
 
 i=0
 for animal, ID in animal_species_series.items():
-    animal_folder_path = Path(f"data/genbank_files/{animal}")
+    animal_folder_path = Path(f"data/species_files/{animal}")
     if not animal_folder_path.exists():
         animal_folder_path.mkdir(parents=True)
 
-    gb_filepath = f"data/genbank_files/{animal}/{animal}_mitochondrion.gb"
+    gb_filepath = f"data/species_files/{animal}/{animal}_mitochondrion.gb"
     i+=1 
     print(i, animal, ID)
     if not Path(gb_filepath).exists():

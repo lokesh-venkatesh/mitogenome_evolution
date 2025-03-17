@@ -1,4 +1,4 @@
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 from pathlib import Path
 

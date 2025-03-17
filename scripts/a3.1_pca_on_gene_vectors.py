@@ -3,7 +3,7 @@ THIS FILE IS MEANT TO GENERATE PLOTS (VERY ROUGH IDEAS) FOR THE
 VARIOUS POSISBLE TRENDS IN THE GENE COUNTS AND GENE ORDERS
 """
 
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns

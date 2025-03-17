@@ -4,7 +4,7 @@ WHICH IS THEN SAVED IN THE CORRESPONDING FOLDERS OF THE GENBANK FILES FOR EACH S
 """
 
 
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns

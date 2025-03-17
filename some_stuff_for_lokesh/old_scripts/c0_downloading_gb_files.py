@@ -1,5 +1,5 @@
 from pathlib import Path
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 from Bio import Entrez
 

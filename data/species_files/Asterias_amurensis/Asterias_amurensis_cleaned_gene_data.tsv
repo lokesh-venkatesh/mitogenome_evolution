@@ -1,0 +1,33 @@
+Gene	Product	Start	Stop	Strand
+ND2	NADH dehydrogenase subunit 2	25	1086	-
+TrnI	tRNA-Ile	1087	1158	+
+ND1	NADH dehydrogenase subunit 1	1159	2136	-
+TrnL	tRNA-Leu	2137	2208	-
+TrnG	tRNA-Gly	2241	2312	-
+TrnY	tRNA-Tyr	2317	2387	-
+TrnD	tRNA-Asp	2391	2461	+
+TrnM	tRNA-Met	2464	2536	-
+TrnV	tRNA-Val	2566	2637	+
+TrnC	tRNA-Cys	2636	2704	-
+TrnA	tRNA-Ala	2784	2855	+
+TrnL	tRNA-Leu	2857	2928	+
+TrnN	tRNA-Asn	2929	3000	-
+TrnQ	tRNA-Gln	3004	3075	+
+TrnP	tRNA-Pro	3077	3145	-
+COX1	cytochrome c oxidase subunit I	3175	4725	+
+TrnR	tRNA-Arg	4724	4793	+
+ND4L	NADH dehydrogenase subunit 4L	4804	5091	+
+COX2	cytochrome c oxidase subunit II	5092	5781	+
+ATP8	ATP synthase F0 subunit 8	5861	6028	+
+ATP6	ATP synthase F0 subunit 6	6013	6705	+
+COX3	cytochrome c oxidase subunit III	6709	7488	+
+TrnS	tRNA-Ser	7487	7557	-
+ND3	NADH dehydrogenase subunit 3	7583	7933	+
+ND4	NADH dehydrogenase subunit 4	7951	9333	+
+TrnH	tRNA-His	9484	9552	+
+ND5	NADH dehydrogenase subunit 5	9622	11538	+
+ND6	NADH dehydrogenase subunit 6	11571	12059	-
+CYTB	cytochrome b	12075	13212	+
+TrnF	tRNA-Phe	13213	13284	+
+TrnE	tRNA-Glu	14178	14246	+
+TrnT	tRNA-Thr	14249	14324	+

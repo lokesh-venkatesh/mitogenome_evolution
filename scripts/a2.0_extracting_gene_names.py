@@ -1,9 +1,4 @@
-"""
-THIS FILE GOES THROUGH ALL OF THE GENBANK FILES AND SAVES A LIST OF ALL product-TO-gene FEATURE MAPPINGS.
-WE THEN HAVE TO MANUALLY EDIT THIS LIST AND RUN a2.1 IN ORDER TO CLEAN UP AND ORGANISE THE GENE DATA.
-"""
-
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -11,28 +6,34 @@ from pathlib import Path
 
 all_species_names = list_all_species_names_from_file_path()
 
-species_gene_data_dict = {species_name: parse_mitochondrial_genome(genbank_filepath=f"data/genbank_files/{species_name}/{species_name}_mitochondrion.gb")
+species_gene_data_dict = {species_name: parse_mitochondrial_genome(genbank_filepath=f"data/species_files/{species_name}/{species_name}_mitochondrion.gb")
                           for species_name in all_species_names}
 
 def product_to_gene_series(species_gene_data_dict):
-    all_data = [] # Iterate through the dictionary
+    """Converts all of the items in the product column of the gene data into a pandas series
+    with products as index column and gene abbreviations as the value column"""
+    all_data = []
     for species, df in species_gene_data_dict.items():
-        if 'Product' in df.columns and 'Gene' in df.columns: # Ensure the required columns exist
-            all_data.append(df[['Product', 'Gene']]) # Extract the Product-Gene mapping
+        if 'Product' in df.columns and 'Gene' in df.columns: 
+            all_data.append(df[['Product', 'Gene']]) 
         else:
             print(f"Warning: Missing 'Product' or 'Gene' columns in data for species: {species}")
-    combined_df = pd.concat(all_data, ignore_index=True) # Concatenate all the dataframes and create the Series
+    combined_df = pd.concat(all_data, ignore_index=True)
     product_gene_series = combined_df.set_index('Product')['Gene']
     return product_gene_series
 
 result_series = product_to_gene_series(species_gene_data_dict)
-#result_series.to_csv("data/cleaned_gene_data/0_all_ACTUAL_raw_product_gene_mappings.tsv", sep='\t', header=True)
 
 def remove_repeated_entries(series):
-    unique_df = series.reset_index().drop_duplicates().set_index('Product') # Convert the Series to a DataFrame to drop duplicates based on both index and values
-    unique_series = unique_df['Gene'] # Convert back to a Series
+    unique_df = series.reset_index().drop_duplicates().set_index('Product') 
+    unique_series = unique_df['Gene']
     return unique_series
 
 final_result_series = remove_repeated_entries(result_series).sort_index()
-final_result_series.to_csv("data/all_unique_product_gene_mappings.tsv", sep='\t', header=True)
-final_result_series.to_csv("data/product_to_gene_mapping.tsv", sep='\t', header=True)
+final_result_series.to_csv("data/all_unique_products_to_genes.tsv", sep='\t', header=True)
+
+"""NOTE: THE BELOW .TSV FILE MUST BE MANUALLY EDITED FOR FURTHER WORK SO THAT THE GENE DATA IS CLEANED UP
+THE WAY YOU WANT IT TO BE. THIS IS BECAUSE THE GENE DATA IS NOT STANDARDIZED ACROSS ALL SPECIES AND
+THEREFORE NEEDS TO BE CLEANED UP MANUALLY."""
+
+final_result_series.to_csv("data/shortlisted_products_to_genes.tsv", sep='\t', header=True)

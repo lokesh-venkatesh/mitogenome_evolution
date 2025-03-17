@@ -1,6 +1,6 @@
 
 from pathlib import Path
-from mitofuncs.mito import *
+from mitofuncs.mitoevo import *
 
 folder_path = Path("data/scrambling")
 if not folder_path.exists():
