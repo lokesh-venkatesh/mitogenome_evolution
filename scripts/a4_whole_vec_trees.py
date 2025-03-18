@@ -3,14 +3,14 @@ from mitofuncs.mitoevo import *
 
 all_species_names = list_all_species_names_from_file_path()
 
-MSA_and_Vector_trees_folder_path = Path("results/MSA_and_kmer_Vector_trees")
+MSA_and_Vector_trees_folder_path = Path("results/MSA_and_kmer_vector_trees")
 if not MSA_and_Vector_trees_folder_path.exists():
     MSA_and_Vector_trees_folder_path.mkdir(parents=True)
 
 for k in [5,6]:
     dict_of_all_kmer_vectors = {}
     for species_name in all_species_names:
-        species_gb_filepath = Path(f"data/genbank_files/{species_name}/{species_name}_mitochondrion.gb")
+        species_gb_filepath = Path(f"data/species_files/{species_name}/{species_name}_mitochondrion.gb")
         genome_sequence = extract_genome_sequence(genbank_filepath=species_gb_filepath)
         nucl_freq = return_genome_nucl_frequencies_as_dict(genome_sequence)
         species_kmer_vector = generate_full_kmer_vector(k, species_name, genome_sequence, nucl_freq, 
@@ -30,22 +30,22 @@ for k in [5,6]:
     plt.xlabel("species")
     plt.ylabel("species")
     plt.tight_layout()
-    plt.savefig(f"results/MSA_and_kmer_Vector_trees/all_{k}mer_species_correlation_heatmap.png", dpi=400)
+    plt.savefig(f"results/MSA_and_kmer_vector_trees/all_{k}mer_species_correlation_heatmap.png", dpi=400)
     plt.close()
 
     vector_distance_dataframe = generate_distance_matrix(dict_of_all_kmer_vectors, r_type="modified_pcc")
     MEGA_distance_df_string = convert_distance_dataframe_to_MEGA11_file_format(vector_distance_dataframe, 
                                                                     f"All {k}mer Vectors of the Current Dataset")
     write_string_to_file(string=MEGA_distance_df_string, 
-                            filepath=f"results/MSA_and_kmer_Vector_trees/all_{k}mer_species.MEG")
+                            filepath=f"results/MSA_and_kmer_vector_trees/all_{k}mer_species.MEG")
 
 all_species_FASTA_file = ""
 
 for species_name in all_species_names:
-    species_gb_filepath = Path(f"data/genbank_files/{species_name}/{species_name}_mitochondrion.gb")
+    species_gb_filepath = Path(f"data/species_files/{species_name}/{species_name}_mitochondrion.gb")
     genome_sequence = extract_genome_sequence(genbank_filepath=species_gb_filepath)
     species_FASTA_file_string = f">{species_name}\n{genome_sequence}"
     all_species_FASTA_file += species_FASTA_file_string+"\n"
 
 write_string_to_file(string=all_species_FASTA_file,
-                         filepath=f"results/MSA_and_kmer_Vector_trees/all_species_in_current_dataset.fasta")
+                         filepath=f"results/MSA_and_kmer_vector_trees/all_species_in_current_dataset.fasta")

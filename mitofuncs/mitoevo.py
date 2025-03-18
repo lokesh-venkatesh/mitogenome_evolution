@@ -103,6 +103,18 @@ def return_all_mitochondrion_genome_sequences_as_dict(species_names, folder_path
         genome_sequences[species_name] = extract_genome_sequence(genbank_filepath)
     return genome_sequences
 
+def return_all_mitogenome_sequences_as_one_fasta(all_species_names):
+    """Returns all mitochondrial genome sequences as a single FASTA file."""
+    fasta_string = ""
+    for species_name in all_species_names:
+        root_dir = Path(__file__).parent.parent
+        fasta_filepath = f"data/species_files/{species_name}/{species_name}_mitogenome.fasta"
+        with open(fasta_filepath, "r") as fasta_file:
+            lines = fasta_file.readlines()
+            genome_sequence = ''.join(lines[1:]).replace('\n', '')
+        fasta_string += f">{species_name}\n{genome_sequence}\n"
+    return fasta_string
+
 def return_genome_nucl_frequencies_as_dict(genome_sequence):
     """RETURNS A DICTIONARY CONTAINING THE NUCLEOTIDE FREQUENCIES OF THE INPUT-GENOME SEQUENCE"""
     try:
