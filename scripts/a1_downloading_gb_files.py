@@ -1,31 +1,9 @@
+import mitofuncs.mitoevo as mito
 from pathlib import Path
 import pandas as pd
 from Bio import Entrez
 from Bio import SeqIO
 import time
-
-def fetch_and_save_genbank(genbank_id, email, output_path):
-    """
-    Fetches a GenBank file for a given ID and saves it to a specified location.
-    
-    Parameters:
-    genbank_id (str): The GenBank accession number or GI number.
-    email (str): Email ID required for NCBI Entrez API usage.
-    output_path (str): Full path including filename to save the GenBank file.
-    """
-    Entrez.email = email  # Set the email ID for NCBI access
-    try:
-        # Fetch the GenBank record
-        with Entrez.efetch(db="nucleotide", id=genbank_id, rettype="gbwithseq", retmode="text") as handle:
-            records = list(SeqIO.parse(handle, "genbank"))  # Read all records before closing handle
-        # Save the file
-        if records:
-            with open(output_path, "w") as output_file:
-                SeqIO.write(records, output_file, "genbank")  # Write in GenBank format
-            print(f"GenBank file saved successfully at: {output_path}")
-        else: print(f"ERROR: No records found for {genbank_id}")
-    except Exception as e:
-        print(f"ERROR FETCHING THE GENBANK RECORD: {e}")
 
 lokesh_email_ID = "lokesh.venkatesh@students.iiserpune.ac.in"
 dataset_filepath = Path("data/animal_mitochondrial_genomes.csv")
@@ -52,7 +30,7 @@ for index, row in animal_species_df.iterrows():
     gb_filepath = f"data/species_files/{animal}/{animal}_mitochondrion.gb"
     print(animal, ID)
     if not Path(gb_filepath).exists():
-        fetch_and_save_genbank(genbank_id=ID, email=lokesh_email_ID, output_path=gb_filepath)
+        mito.fetch_and_save_genbank(genbank_id=ID, email=lokesh_email_ID, output_path=gb_filepath)
     else:
         print(f"Genbank file for {animal} already exists.")
 

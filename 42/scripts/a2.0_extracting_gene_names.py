@@ -1,12 +1,12 @@
-from mitofuncs.mitoevo import *
+import mitofuncs.mitoevo as mito
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 
-all_species_names = list_all_species_names_from_file_path()
+all_species_names = mito.list_all_species_names_from_file_path()
 
-species_gene_data_dict = {species_name: parse_mitochondrial_genome(genbank_filepath=f"data/species_files/{species_name}/{species_name}_mitochondrion.gb")
+species_gene_data_dict = {species_name: mito.parse_mitochondrial_genome(genbank_filepath=f"data/species_files/{species_name}/{species_name}_mitochondrion.gb")
                           for species_name in all_species_names}
 
 def product_to_gene_series(species_gene_data_dict):
