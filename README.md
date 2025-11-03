@@ -18,3 +18,5 @@ The following was the workflow we used to be able to isolate a number of sequenc
 6. Then, we identify pairs of genomes where the gene orders have changed. This indicates those pairs of genomes where a translocation has taken place.
 7. From each of these tuples of genomes, we identify the synteny blocks that have undergone a rearrangement, and then isolate the four types of sequences related to the rearrangement of one synteny block
 8. From each of these four sequences obtained, we then compile them for all such tuples obtained, and finally analyse these sequences for common motifs and trends in their motif distributions for any 'signal' that a hypothetical translocation-causing 'machinery' would identify and execute.
+
+PS: This repo is still under construction :3 please ignore the overall structure and organisation of the repo for now ;)
